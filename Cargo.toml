@@ -1,0 +1,12 @@
+[package]
+
+name = "tr"
+version = "0.0.1"
+authors = [ "Daan Hoogland <daan@onecht.net>" ]
+
+[dependencies]
+clap = "*"
+
+[[bin]]
+
+name = "tr"
