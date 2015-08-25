@@ -48,17 +48,43 @@
 extern crate clap;
 use clap::{Arg, App};
 
+struct Translation {
+	complement: bool,
+	delete: bool,
+	squeeze: bool,
+	search: String,
+	replace: String
+}
 
-
-fn main() {
-	parse_cl();
-
-    // more porgram logic goes here...
+fn print_opts(tr: Translation)
+{
+    println!("flags\ncompliment {}\ndelete: {}\nsqueeze {}", tr.complement, tr.delete, tr.squeeze);
+    println!("search: {}", tr.search);
+    println!("replace: {}", tr.replace);
 }
 
 
-fn parse_cl() {
-	    let matches = App::new("tr")
+fn append_replace(mut tr: Translation) -> Translation {
+	let mut search = tr.search.chars();
+	let mut replace = tr.replace.chars();
+	let mut newreplace = String::new();
+
+  	let mut kar = replace.next();
+  	let mut nextkar : Option<char> = kar;
+    while search.next().is_none() {
+    	if nextkar.is_none() {
+    		kar = nextkar;
+    	}
+        newreplace.push(kar.unwrap());
+    	let nextkar = replace.next();
+    }
+    tr.replace = newreplace;
+    return tr;
+}
+
+
+fn get_opts(mut tr: Translation) -> Translation {
+    let matches = App::new("tr")
                           .author("Daan Hoogland <daan@gmail.com>")
                           .version(&crate_version!()[..])
                           .about("translate")
@@ -82,14 +108,29 @@ fn parse_cl() {
                           )
                           .get_matches();
 
-    let search = matches.value_of("search").unwrap();
-    let replace = matches.value_of("replace").unwrap_or("");
-    let compliment = matches.is_present("compliment");
-    let delete = matches.is_present("delete");
-    let squeeze = matches.is_present("squeeze");
-
-	// actually put them somewhere for retrieval by the other parts of the program instead of print
-    println!("flags\ncompliment {}\ndelete: {}\nsqueeze {}", compliment, delete, squeeze);
-    println!("search: {}", search);
-    println!("replace: {}", replace);
+    tr.search = matches.value_of("search").unwrap().to_string();
+    tr.replace = matches.value_of("replace").unwrap_or("").to_string();
+    tr.complement = matches.is_present("complement");
+    tr.delete = matches.is_present("delete");
+    tr.squeeze = matches.is_present("squeeze");
+    return tr;
 }
+
+fn main() {
+	let tr = Translation { complement: false, delete: false, squeeze: false, search: String::new(), replace: String::new()}; 
+    let tr = get_opts(tr);
+	// actually put them somewhere for retrieval by the other parts of the program instead of print
+    let tr = append_replace(tr);
+    print_opts(tr);
+// if complement is turned on recreate 'search' to contain the complement of search
+// open std input
+// open std ouput
+// read a char
+// if not in search => pass through
+// decide what to do
+// switching over:
+// case either 'delete' switched on or find matching char in 'replace'
+// case 'squeeze' switched on
+// 
+}
+
