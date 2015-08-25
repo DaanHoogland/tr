@@ -65,18 +65,20 @@ fn print_opts(tr: Translation)
 
 
 fn append_replace(mut tr: Translation) -> Translation {
-	let mut search = tr.search.chars();
-	let mut replace = tr.replace.chars();
 	let mut newreplace = String::new();
+	{// extra scope to guard the argument
+        let mut search = tr.search.chars();
+        let mut replacechars = tr.replace.chars();
 
-  	let mut kar = replace.next();
-  	let mut nextkar : Option<char> = kar;
-    while search.next().is_none() {
-    	if nextkar.is_none() {
-    		kar = nextkar;
-    	}
-        newreplace.push(kar.unwrap());
-    	let nextkar = replace.next();
+        let mut kar = replacechars.next();
+        let mut nextkar : Option<char> = kar;
+        while search.next().is_none() {
+            if nextkar.is_none() {
+                kar = nextkar;
+            }
+            newreplace.push(kar.unwrap());
+            nextkar = replacechars.next();
+        }
     }
     tr.replace = newreplace;
     return tr;
