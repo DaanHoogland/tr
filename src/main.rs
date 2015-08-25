@@ -72,8 +72,8 @@ fn append_replace(mut tr: Translation) -> Translation {
 
         let mut kar = replacechars.next();
         let mut nextkar : Option<char> = kar;
-        while search.next().is_none() {
-            if nextkar.is_none() {
+        while ! search.next().is_none() {
+            if ! nextkar.is_none() {
                 kar = nextkar;
             }
             newreplace.push(kar.unwrap());
@@ -118,6 +118,7 @@ fn get_opts(mut tr: Translation) -> Translation {
     return tr;
 }
 
+#[cfg(not(test))]
 fn main() {
 	let tr = Translation { complement: false, delete: false, squeeze: false, search: String::new(), replace: String::new()}; 
     let tr = get_opts(tr);
@@ -134,5 +135,29 @@ fn main() {
 // case either 'delete' switched on or find matching char in 'replace'
 // case 'squeeze' switched on
 // 
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{append_replace, Translation};
+
+    #[test]
+    fn append_replace_when_it_is_short() {
+    	let tr = Translation {search: "abcde".to_string() , replace: "xyz".to_string(), complement: false, delete: false, squeeze: false};
+        let tr = append_replace(tr);
+        assert_eq!("xyzzz", tr.replace);
+    }
+    #[test]
+    fn append_replace_when_it_is_long() {
+    	let tr = Translation {search: "a".to_string() , replace: "xyz".to_string(), complement: false, delete: false, squeeze: false};
+        let tr = append_replace(tr);
+        assert_eq!("x", tr.replace);
+    }
+    #[test]
+    fn append_replace_when_it_is_exact_in_length() {
+    	let tr = Translation {search: "abc".to_string() , replace: "xyz".to_string(), complement: false, delete: false, squeeze: false};
+        let tr = append_replace(tr);
+        assert_eq!("xyz", tr.replace);
+    }
 }
 
