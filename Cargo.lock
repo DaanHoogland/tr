@@ -24,3 +24,7 @@ name = "strsim"
 version = "0.4.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 
+[metadata]
+"checksum ansi_term 0.6.3 (registry+https://github.com/rust-lang/crates.io-index)" = "ae206c860259479b73b3abc98b66da811843056ed570ed79eb95d3d9b2524325"
+"checksum clap 1.2.1 (registry+https://github.com/rust-lang/crates.io-index)" = "577b676ea9ff11b95080da667570a256d6ee724db3cd8c0c80c390b53d07bea1"
+"checksum strsim 0.4.0 (registry+https://github.com/rust-lang/crates.io-index)" = "b1d6a2200349ab2221a712c79e797cbb814086eea4ad5d12cc5cafab5f2089d9"
